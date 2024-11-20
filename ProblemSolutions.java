@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   JAI FISCHER / COMP 272 001
  *
  *   This java file contains the problem solutions for the methods selectionSort,
  *   mergeSortDivisibleByKFirst, asteroidsDestroyed, and numRescueCanoes methods.
@@ -41,7 +41,15 @@ public class ProblemSolutions {
             // YOU CODE GOES HERE -- COMPLETE THE INNER LOOP OF THIS
             // "SELECTION SORT" ALGORITHM.
             // DO NOT FORGET TO ADD YOUR NAME / SECTION ABOVE
-
+            int tmp = values[i];
+            int selectedIdx = i;
+            for(int k = i; k < n; k++) {
+                selectedIdx = ascending ? (values[selectedIdx] > values[k] ? k : selectedIdx) : (values[selectedIdx] < values[k] ? k : selectedIdx);
+            }
+            if(i != selectedIdx) {
+                values[i] = values[selectedIdx];
+                values[selectedIdx] = tmp;
+            }
         }
 
     } // End class selectionSort
@@ -101,6 +109,54 @@ public class ProblemSolutions {
         // ALLOCATES AUXILIARY DATA STRUCTURES (TEMPORARY ARRAYS). IT WILL BE EASIER
         // TO CODE WITH A SPACE COMPLEXITY OF O(N LOG N), WHICH IS FINE FOR PURPOSES
         // OF THIS PROGRAMMING EXERCISES.
+        int cntr = 0;
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i] % k == 0){
+                int tmp = arr[cntr];
+                arr[cntr] = arr[i];
+                arr[i] = tmp;
+                cntr++;
+            }
+        }
+
+        int size1 = mid - left + 1;
+        int size2 = right - mid;
+
+        int[] l = new int[size1];
+        int[] r = new int[size2];
+
+        for(int i = 0; i < size1; i++) {l[i] = arr[left + i];}
+        for(int i = 0; i < size2; i++) {r[i] = arr[mid + 1 + i];}
+
+        int i = 0;
+        int j = 0;
+        int idx = left;
+        while (i < size1 && j < size2) {
+            if(l[i] % k != 0 && r[j] % k != 0) {
+                if (l[i] <= r[j]) {
+                    arr[idx] = l[i];
+                    i++;
+                } else {
+                    arr[idx] = r[j];
+                    j++;
+                }
+
+            }else{
+                i++;
+            }
+            idx++;
+        }
+        while (i < size1) {
+            arr[idx] = l[i];
+            idx++;
+            i++;
+        }
+
+        while (j < size2) {
+            arr[idx] = r[j];
+            idx++;
+            j++;
+        }
 
         return;
 
@@ -155,9 +211,12 @@ public class ProblemSolutions {
     public static boolean asteroidsDestroyed(int mass, int[] asteroids) {
 
         // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT()
-
-        return false;
-
+        Arrays.sort(asteroids);
+        for(int i = 0; i < asteroids.length; i++){
+            if(mass < asteroids[i]) return false;
+            mass += asteroids[i];
+        }
+        return true;
     }
 
 
@@ -193,8 +252,19 @@ public class ProblemSolutions {
     public static int numRescueSleds(int[] people, int limit) {
 
         // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT
+        if(limit == 0 || people.length == 0) return 0;
 
-        return -1;
+        Arrays.sort(people);
+        int sleds = 1;
+        int tmp = 0;
+        for(int i = 0; i < people.length; i++){
+            tmp += people[i];
+            if(tmp > limit){
+                sleds++;
+                tmp = people[i];
+            }
+        }
+        return sleds;
 
     }
 
